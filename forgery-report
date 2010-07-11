@@ -1,1 +1,14 @@
-/etc/network/if-up.d/forgery-report
+#!/bin/sh
+
+# TODO:
+# 1) nat-pmp ssh 2322
+# 2) google geolocation add to map
+# 3) automatic webcam peeking
+
+# target server script
+target=my.server.fi/incoming.sh
+
+# TODO: really no easier way to get current ip address?
+ip=`ifconfig | grep "inet " | grep -v 127.0.0.1 | grep -o "addr:[^ ]* " | cut -d: -f2`
+host=`hostname`
+curl -fs $target?$host-$ip
