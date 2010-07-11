@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# REQUIRES: curl, upnpc, geolocate-cli
+# [sudo aptitude install curl]
+# http://miniupnp.tuxfamily.org/
+# http://code.google.com/p/geolocate-cli
+
 # TODO:
 # 1) nat-pmp ssh 2322
 # 2) google geolocation add to map
@@ -11,4 +16,15 @@ target=my.server.fi/incoming.sh
 # TODO: really no easier way to get current ip address?
 ip=`ifconfig | grep "inet " | grep -v 127.0.0.1 | grep -o "addr:[^ ]* " | cut -d: -f2`
 host=`hostname`
-curl -fs $target?$host-$ip
+ssh_nat_port=2322
+
+# DEBUG
+echo ip $ip  host $host
+
+# open nat-pnp port
+upnpc -a $ip 22 $ssh_nat_port TCP &
+
+# is there ever need to close port?
+# upnpc -d $ssh_nat_port TCP
+
+# curl -fs $target?$host-$ip
